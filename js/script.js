@@ -30,13 +30,14 @@ function showPage(clickedPage) {
 
 
 
-function appendPageLinks(pageNumber) {
+function appendPageLinks() {
     
     let pageCount = Math.ceil(studentCount / 10);
+    alert ("sayfa sayısı "+ pageCount);
     $('.page').append('<div class="pagination"></div>');
     $('.pagination').append('<ul></ul>');
     
-    for (let i=1; i<pageCount; i++ ) 
+    for (let i=1; i<=pageCount; i++ ) 
     {      
         $('.pagination ul').append(    
         '<li>'+
@@ -46,11 +47,10 @@ function appendPageLinks(pageNumber) {
     $( ".pagination ul li a").first().addClass("active");
 }
 
-appendPageLinks(3);
+appendPageLinks();
 
 $('.pagination ul li a').on('click',function () {
    let clickedPage =  $(this).parent('li').index()+1;
    alert(clickedPage + "sayfasına tuşlandı");
 showPage(clickedPage);
 })
-
