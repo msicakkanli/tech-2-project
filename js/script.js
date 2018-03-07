@@ -1,56 +1,51 @@
-//count student 
+//set number of student per page 
+const studentCountOnPage = 10;
 
-let student = $('.student-list').children();
-let studentCount = student.length;
-// get student li item
-let students = document.getElementsByClassName('student-item');
-
-$(document).ready(function () {
-    showPage(1);
-})
-
-function showPage(clickedPage) {
-    //hide studenlist
-    alert("showpage çalıştı");
-    $('.student-item').hide();
-    //show student items on first page
-    let studentNumber = 10 * clickedPage;
-    alert("student number = "+studentNumber);
-    if (clickedPage === 1) {
-        for (let i=0; i<studentNumber; i++) {
-            students[i].style.display = 'block';
-        }
-    } else {
-        alert("elseye gelindi")
-        for (let i = 10*(clickedPage-1); i<studentNumber; i++){
-            students[i].style.display = 'block';   
-        }
-    }; 
+function showPage (pageNumber, allStudent) {
+  // first hide all students on the page
+  $('.student-item').hide();
+  // Then loop through all students in our student list argument
+  for (let i=0; i<= allStudent.length; i++) {
+    // if student should be on this page number
+    if (i < studentCountOnPage * pageNumber && i >= (studentCountOnPage * (pageNumber -1)))
+    // show the student
+    $(allStudent[i]).show();
+  }
 }
+showPage(1, $('.student-item'));
 
+//take a student list as an argument
+function appendPageLinks(allStudent) {
+  //determine how many pages for this student list
+  const totalPages = Math.ceil($('.student-item').length)/studentCountOnPage;
+  // add a page link to the page link section
+  // create and insert the new HTML elements
+  const newDiv = document.createElement('div');
+  const newUl = document.createElement('ul');
+  const newLi = document.createElement('li');
+  //const newA = document.createElement('a');
+  newDiv.appendChild(newUl);
+  newUl.appendChild(newLi);
+  //newLi.appendChild(newA);
+  newDiv.className = 'pagination';
+  $('.page').append(newDiv);
 
+  // append our new page link section to the site
+  for (let i=0; i<=totalPages; i++) {
+  $('.pagination li').append("<a href=#>" + (i+1) + "</a>");
 
-function appendPageLinks() {
-    
-    let pageCount = Math.ceil(studentCount / 10);
-    alert ("sayfa sayısı "+ pageCount);
-    $('.page').append('<div class="pagination"></div>');
-    $('.pagination').append('<ul></ul>');
-    
-    for (let i=1; i<=pageCount; i++ ) 
-    {      
-        $('.pagination ul').append(    
-        '<li>'+
-            '<a href="#">' + i + '</a>'+
-          '</li>'
-    )};
-    $( ".pagination ul li a").first().addClass("active");
-}
+  }
+  // define what happens when you click a link (event listener)
+  $('a').on('click', function(e) {
+    // Use showPage to display the page for the link clicked
+    showPage(e.delegateTarget.text, $('.student-item'));
+    // remove the old page link section from the site
+    $('a').removeClass('active');
+    // mark that link as "active"
+    e.delegateTarget.className = 'active';
 
-appendPageLinks();
+  });
 
-$('.pagination ul li a').on('click',function () {
-   let clickedPage =  $(this).parent('li').index()+1;
-   alert(clickedPage + "sayfasına tuşlandı");
-showPage(clickedPage);
-})
+};
+appendPageLinks($('.student-item'));
+
